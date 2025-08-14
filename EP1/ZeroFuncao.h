@@ -16,6 +16,12 @@ typedef struct {
   int grau;
 } Polinomio;
 
+enum CritParada {
+    CRIT1;
+    CRIT2;
+    CRIT3;
+};  
+
 // Métodos
 // Retornam valor do erro quando método finalizou. Este valor depende de tipoErro
 
