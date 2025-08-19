@@ -5,6 +5,8 @@
 #include "ZeroFuncao.h"
 #include "DoubleType.h"
 
+
+
 // ERRO EH O VALOR QUE FAZ SAIR DO WHILE PARA CADA CASO DE CRITERIO (ERRO MUDA C0ONFORME CRITERIO)
 //FAZER AS 3 FUNÇÕES QUE CALCULAM O TIPO DE ERRO
 //CHAMAR UMA FUNÇÃO DE CONTROLE NO WHILE TODA VEZ
@@ -30,16 +32,16 @@ real_t calcErros (real_t fxk, real_t xk, real_t xk1, real_t *valErro, int criter
 
     //MELHOR NAO USAR SWITCH DEVIDOP AOS BREAKS
     switch (criterio) {
-        case 1:
+        case CRITERIO_1:
             *valErro = fabs(xk - xk1) / fabs(xk);
             return (*valErro <= pow(10, -7));
             break;
 
-        case 2:
+        case CRITERIO_2:
             *valErro = fabs(fxk);
             return (*valErro <= DBL_EPSILON);
             break;
-        case 3:
+        case CRITERIO_3:
             Double_t uxk, uxk1;
             uxk.f = xk;
             uxk1.f = xk1;
@@ -56,22 +58,25 @@ real_t newtonRaphson (Polinomio p, real_t x0, int criterioParada, int *it, real_
 
 
 
-
     //metodo da iteração linear
-    real_t x_new = x0, x_old;
+    real_t x_new = x0, x_old, fx, fdx;
     real_t valErro = 0;
+    void (*calculo)(Polinomio, real_t, real_t *, real_t *) = calcPolinomio_rapido;
+    
+    if(tipoCalc == 1) {
+        calculo = calcPolinomio_lento;
+    }
 
     (*it) = 0;
     do {
         x_old = x_new;
-        x_new = PHIII
-    } while (calcErros(CALCULO, x_new, x_old, &valErro, criterioParada) && (*it) < MAXIT);
+        calculo(p, x_old, &fx, &fdx);
+        x_new = x_old - fx / fdx; //CUIDAR CASO FDX == 0
+    } while (calcErros(fx, x_new, x_old, &valErro, criterioParada) && (*it) < MAXIT);
 
     *raiz = x_new;
     
     return valErro;
-
-
 
 }
 

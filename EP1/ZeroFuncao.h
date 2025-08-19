@@ -6,6 +6,7 @@
 // Aproximação aceitável como valor zero
 #define ZERO DBL_EPSILON
 
+
 // Parâmetros para teste de convergência
 #define MAXIT 500
 #define EPS 1.0e-7
@@ -16,6 +17,11 @@ typedef struct {
   int grau;
 } Polinomio;
 
+enum Criterios {
+  CRITERIO_1,
+  CRITERIO_2,
+  CRITERIO_3
+};
 
 // Métodos
 // Retornam valor do erro quando método finalizou. Este valor depende de tipoErro

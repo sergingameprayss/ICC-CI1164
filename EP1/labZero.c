@@ -5,6 +5,9 @@
 #include "utils.h"
 #include "ZeroFuncao.h"
 
+#define RAPIDO 0;
+#define LENTO 1;
+
 int main ()
 {
 
@@ -20,6 +23,17 @@ int main ()
 
 
   // Restante do programa a partir daqui
+  fesetround(FE_DOWNWARD);
+  real_t raiz = 0;
+  int it = 0;
+  real_t erro;
+
+  printf("RAPIDO\n");
+  printf("\n");
+  erro = bisseccao(pol, a, b, CRITERIO_1, &it, &raiz, 0);
+
+  printf("bissec %.15e %.15e %d %.8e\n", raiz, erro, it, TEMPO);
+
 
   return 0;
 }
