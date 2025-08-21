@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-
+#include <fenv.h>
 #include "utils.h"
 #include "ZeroFuncao.h"
 #include "DoubleType.h"
@@ -29,37 +29,45 @@
 //retorna se o erro atinge o criterio de parada
 //coloca o valor do erro na variavel valErro
 real_t calcErros (real_t fxk, real_t xk, real_t xk1, real_t *valErro, int criterio) {
+    fesetround(FE_DOWNWARD);
 
-    //MELHOR NAO USAR SWITCH DEVIDOP AOS BREAKS
-    switch (criterio) {
-        case CRITERIO_1:
-            *valErro = fabs(xk - xk1) / fabs(xk);
-            return (*valErro <= pow(10, -7));
-            break;
+    if(criterio == CRITERIO_1){
+        real_t dif = fabs(xk - xk1);
+        if(fabs(xk) <= ZERO)
+            *valErro = dif;
+        else *valErro = dif / fabs(xk);
 
-        case CRITERIO_2:
-            *valErro = fabs(fxk);
-            return (*valErro <= DBL_EPSILON);
-            break;
-        case CRITERIO_3:
-            Double_t uxk, uxk1;
-            uxk.f = xk;
-            uxk1.f = xk1;
-            *valErro = fabs(uxk.i - uxk1.i) - 1;
-            return (*valErro <= 3);
-            break;
+        return (*valErro <= EPS);
+    }
+
+
+    if(criterio == CRITERIO_2){
+        *valErro = fabs(fxk);
+        return (*valErro <= ZERO);
+    }
+
+    if(criterio == CRITERIO_3) {
+        Double_t uxk, uxk1;
+        uxk.f = xk;
+        uxk1.f = xk1;
+        *valErro = llabs(uxk.i - uxk1.i) - 1;
+        if(*valErro < ZERO){
+            *valErro = 0.0;
         }
+        return (*valErro <= ULPS);    
+    }
 
-        return 0;
+    return 0;
 }
 
 // Retorna valor do erro quando método finalizou. Este valor depende de tipoErro
 real_t newtonRaphson (Polinomio p, real_t x0, int criterioParada, int *it, real_t *raiz, int tipoCalc) {
-
+    
+    fesetround(FE_DOWNWARD);
 
 
     //metodo da iteração linear
-    real_t x_new = x0, x_old, fx, fdx;
+    real_t x_new = x0, x_old, fx, fdx, old_fdx;
     real_t valErro = 0;
     void (*calculo)(Polinomio, real_t, real_t *, real_t *) = calcPolinomio_rapido;
     
@@ -67,12 +75,19 @@ real_t newtonRaphson (Polinomio p, real_t x0, int criterioParada, int *it, real_
         calculo = calcPolinomio_lento;
     }
 
-    (*it) = 0;
+    (*it) = 1;
     do {
+
         x_old = x_new;
         calculo(p, x_old, &fx, &fdx);
-        x_new = x_old - fx / fdx; //CUIDAR CASO FDX == 0
-    } while (calcErros(fx, x_new, x_old, &valErro, criterioParada) && (*it) < MAXIT);
+        if(fabs(fdx) > ZERO){
+            old_fdx = fdx;
+            x_new = x_old - (fx / fdx);
+        } else  x_new = x_old - (fx / old_fdx);
+
+        calculo(p, x_old, &fx, &fdx);
+        ++(*it);
+    } while (!calcErros(fx, x_new, x_old, &valErro, criterioParada) && (*it) < MAXIT);
 
     *raiz = x_new;
     
@@ -83,12 +98,11 @@ real_t newtonRaphson (Polinomio p, real_t x0, int criterioParada, int *it, real_
 
 // Retorna valor do erro quando método finalizou. Este valor depende de tipoErro
 real_t bisseccao (Polinomio p, real_t a, real_t b, int criterioParada, int *it, real_t *raiz, int tipoCalc){
-
+    
+    fesetround(FE_DOWNWARD);
     real_t valErro = 0;
 
     void (*calculo)(Polinomio, real_t, real_t *, real_t *) = calcPolinomio_rapido;
-
-    // real_t (*erro)(real_t xk, real_t xk1, real_t fxk)
 
     if(tipoCalc == 1) {
         calculo = calcPolinomio_lento;
@@ -97,38 +111,38 @@ real_t bisseccao (Polinomio p, real_t a, real_t b, int criterioParada, int *it, 
     real_t xm_old, xm_new;
 
     xm_new = (a + b) / 2.0;
-    real_t pa, pb, pxm;
+    real_t pa, pb, pxm, d;
 
-    (*it) = 0;
-    //FAZER PŔO LENTO TB
-    calculo(p, a, &pa, NULL); //CUIDADO NULL AQ
-    calculo(p, xm_new, &pxm, NULL);
+    (*it) = 1;
+
+    calculo(p, a, &pa, &d); 
+    calculo(p, xm_new, &pxm, &d);
 
     if (pa * pxm < 0) {
         b = xm_new;
     } else if (pa * pxm > 0) {
         a = xm_new;
     } else  {
-        *raiz  = xm_new;
+        *raiz = xm_new;
         return valErro; // Retorna erro 0 se raiz exata encontrada
     }
     do {
-        (*it)++;
+        
+        ++(*it);
 
         xm_old = xm_new;
         xm_new = (a + b) / 2.0;
-            //FAZER PŔO LENTO TB
-        calculo(p, a, &pa, NULL);
-        calculo(p, xm_new, &pxm, NULL);
+        calculo(p, a, &pa, &d);
+        calculo(p, xm_new, &pxm, &d);
         if (pa * pxm < 0) {
             b = xm_new;
         } else if (pa * pxm > 0) {
             a = xm_new;
         } else {
             *raiz = xm_new;
-            return 0; //pois raiz encontradq????????
+            return 0; 
         }
-    } while (calcErros(pxm, xm_new, xm_old, &valErro, criterioParada) && (*it) < MAXIT); //ver condição criterio aq
+    } while (!calcErros(pxm, xm_new, xm_old, &valErro, criterioParada) && (*it) < MAXIT); //ver condição criterio aq
 
     *raiz = xm_new;
 
@@ -138,6 +152,7 @@ real_t bisseccao (Polinomio p, real_t a, real_t b, int criterioParada, int *it, 
 
 void calcPolinomio_rapido(Polinomio p, real_t x, real_t *px, real_t *dpx)
 {
+    fesetround(FE_DOWNWARD);
     real_t b = 0;
     real_t c = 0;
     for (int i = p.grau; i > 0; --i) {
@@ -154,12 +169,17 @@ void calcPolinomio_rapido(Polinomio p, real_t x, real_t *px, real_t *dpx)
 
 void calcPolinomio_lento(Polinomio p, real_t x, real_t *px, real_t *dpx)
 {
+    fesetround(FE_DOWNWARD);
+
+    *px = 0.0;
+    *dpx = 0.0;
+
     for (int i = p.grau; i >= 0; --i) {
         *px += p.p[i] * pow(x, i);
     }
 
     for (int i = p.grau; i > 0; --i) {
-        *dpx += i * p.p[i] * pow(x, i - 1);
+        *dpx +=  p.p[i] * i * pow(x, i - 1);
     }
 
 }
