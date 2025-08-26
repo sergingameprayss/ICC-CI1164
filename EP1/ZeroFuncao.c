@@ -67,7 +67,7 @@ real_t newtonRaphson (Polinomio p, real_t x0, int criterioParada, int *it, real_
 
 
     //metodo da iteração linear
-    real_t x_new = x0, x_old, fx, fdx, old_fdx;
+    real_t x_new = x0, x_old, fx, fdx, old_fdx = 1;
     real_t valErro = 0;
     void (*calculo)(Polinomio, real_t, real_t *, real_t *) = calcPolinomio_rapido;
     

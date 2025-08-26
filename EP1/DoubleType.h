@@ -1,3 +1,5 @@
+#ifndef DOUBLETYPE_H
+#define DOUBLETYPE_H    
 #include <stdint.h>
 #include <float.h>
 
@@ -13,3 +15,4 @@ typedef union
     } parts;
 } Double_t;
 
+#endif

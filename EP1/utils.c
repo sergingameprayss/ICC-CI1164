@@ -3,7 +3,7 @@
 #include <math.h>
 
 #include "utils.h"
-#include <linux/time.h>
+
 
 /*  Retorna tempo em milisegundos
 
