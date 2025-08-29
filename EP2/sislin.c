@@ -2,7 +2,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "utils.h"
 #include "sislin.h"
 
 // Alocaçao de matriz em memória. 
@@ -37,7 +36,7 @@ void liberaSisLin (SistLinear_t *SL)
 {
   if (SL) {
     if (SL->A) {
-      if (SL->A[0]) free (SL->A[0]);
+      //if (SL->A[0]) free (SL->A[0]);
       free (SL->A);
     }
     if (SL->b) free(SL->b);

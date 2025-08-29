@@ -10,6 +10,13 @@ int main () {
 
     SistLinear_t *sl = lerSisLin();
 
+    prnSisLin(sl);
 
+    triangulariza(sl);
 
+    prnSisLin(sl);
+
+    liberaSisLin(sl);
+
+    return 1;
 }
