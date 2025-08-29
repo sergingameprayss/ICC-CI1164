@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <fenv.h>
 
 #include "utils.h"
 #include "sislin.h"
@@ -39,8 +40,8 @@ static void trocaLinha (SistLinear_t *C, int l, int lp) {
 /* Seja um S.L. de ordem 'n'
    C = A|B em Ax=B
  */
-void triangulariza( SistLinear_t *C)
-{
+void triangulariza( SistLinear_t *C) {
+    fesetround(FE_DOWNWARD);
     /* para cada linha a partir da primeira */
     for (int i=0; i < C->n; ++i) {
         unsigned int iPivo = encontraMax(C, i);
@@ -56,7 +57,18 @@ void triangulariza( SistLinear_t *C)
     }
 }
 
-void retrosubst( SistLinear_t *C, real_t *X )
-{
- 
+void retrosubst( SistLinear_t *C, real_t *X) {
+    fesetround(FE_DOWNWARD);
+    real_t y;
+    //vai alterar os termos independentes dessa forma
+    for(int i = C->n - 1; i >= 0; --i){
+        y = C->b[i];
+        //subtrai do temro independente da linha 
+        //os valores de x que ja temos
+        for(int k = C->n - 1; k > i; --k){
+            y -= (C->A[i][k] * X[k]);
+        }
+
+        X[i] = y / C->A[i][i];
+    }
 }
