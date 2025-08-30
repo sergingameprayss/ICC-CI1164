@@ -9,31 +9,40 @@
 int main () {
 
     SistLinear_t *sl = lerSisLin();
-    real_t *X = malloc(sl->n * sizeof(real_t));
-    real_t *R = malloc(sl->n * sizeof(real_t));
-    real_t it = 0;
-
+    real_t *Xeg = malloc(sl->n * sizeof(real_t));
+    real_t *Reg = malloc(sl->n * sizeof(real_t));
+    real_t *Xgs = calloc(sl->n, sizeof(real_t));
+    real_t *Rgs = malloc(sl->n * sizeof(real_t));
+    real_t norma;
     prnSisLin(sl);
 
+    SistLinear_t *sl2 = dupSisLin(sl);
+
     triangulariza(sl);
-    //prnSisLin(sl);
-    retrosubst(sl, X);
-    residuo(sl, X, R, sl->n);
+    retrosubst(sl, Xeg);
+    residuo(sl, Xeg, Reg, sl->n);
+
+    int it = gaussSeidel(sl2, Xgs, TOL, MAXIT, &norma);
+    residuo(sl2, Xgs, Rgs, sl2->n);
 
     printf("EG:\n");
     printf("COLOCAR TEMPO DPS   ms\n");
-    prnVetor(X, sl->n);
-    prnVetor(R, sl->n);
+    prnVetor(Xeg, sl->n);
+    prnVetor(Reg, sl->n);
+    printf("\n");
 
-    printf("GS [ <it> iterações ]:\n");
+    printf("GS [ %d iterações ]:\n", it);
     printf("COLOCAR TEMPO DPS   ms\n");
-    //aq devem vir os resultados de x's
-    //aq os residuos
+    prnVetor(Xgs, sl2->n);
+    prnVetor(Rgs, sl2->n);
     
 
     liberaSisLin(sl);
-    free(X);
-    free(R);
+    liberaSisLin(sl2);
+    free(Xeg);
+    free(Reg);
+    free(Xgs);
+    free(Rgs);
 
     return 1;
 }

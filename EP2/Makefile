@@ -1,6 +1,6 @@
 # PROGRAMA
     PROG = perfSL
-    OBJS = utils.o eliminacaoGauss.o sislin.o# acrescentar aqui outros módulos do programa
+    OBJS = utils.o eliminacaoGauss.o sislin.o gaussSeidel.o# acrescentar aqui outros módulos do programa
 
 # Compilador
     CC     = gcc
