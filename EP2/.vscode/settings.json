@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "gaussseidel.h": "c",
+        "sislin.h": "c"
+    }
+}
