@@ -39,13 +39,17 @@ int main () {
     int it = gaussSeidel(sl2, Xgs, TOL, MAXIT, &norma);
     residuo(sl2, Xgs, Rgs, sl2->n);
 
-    
+    LIKWID_MARKER_INIT;
+    LIKWID_MARKER_START("GS_TEST");
+    rtime_t time_GS = timestamp();
 
     printf("GS [ %d iterações ]:\n", it);
-    printf("COLOCAR TEMPO DPS   ms\n");
+    printf("%.8e\n", timestamp() - time_GS);
     prnVetor(Xgs, sl2->n);
     prnVetor(Rgs, sl2->n);
-    
+
+    LIKWID_MARKER_STOP("GS_TEST");
+    LIKWID_MARKER_CLOSE;
 
     liberaSisLin(sl);
     liberaSisLin(sl2);
