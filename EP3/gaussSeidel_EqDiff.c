@@ -60,18 +60,33 @@ rtime_t gaussSeidel_3Diag (Tridiag *sl, real_t *Y, unsigned int maxiter) {
 }
 
 
-real_t normaL2_3Diag (Tridiag *sl, real_t *Y)
-{
-  int n = sl->n;
-  real_t normaL2;
 
-  normaL2 = 0.0;
+  // real_t norma = 0.0;
 
-  // algoritmo para calcular Norma L2 com  vetores   das  diagonais   e  termos
-  // independentes do SL
-  
-  return normaL2;
-  
+  // for (int i=0; i < n; ++i)
+  //   norma += X[i]*X[i];
+
+  // return sqrt(norma);
+
+real_t normaL2_3Diag (Tridiag *sl, real_t *Y, double h) {
+    int n = sl->n;
+
+    real_t normaL2 = 0.0;
+
+    for (int i = 0; i < n; i++) {
+        real_t Ay_i;
+
+        if (i == 0)
+            Ay_i = (sl->D[0] * Y[0]) + (sl->Ds[0] * Y[1]);
+        else if (i == n - 1)
+            Ay_i = (sl->Di[i-1] * Y[i-1]) + (sl->D[i] * Y[i]);
+        else
+            Ay_i = (sl->Di[i-1] * Y[i-1]) + (sl->D[i] * Y[i]) + (sl->Ds[i] * Y[i+1]);
+
+        normaL2 += pow(sl->B[i] - Ay_i, 2);
+    }
+
+    return sqrt(h * normaL2);
 }
 
 
@@ -107,19 +122,29 @@ rtime_t gaussSeidel_EDO (EDo *edoeq, real_t *Y, unsigned int maxiter) {
 }
 
 real_t normaL2_EDO (EDo *edoeq, real_t *Y) {
-  
-  
-    int n=edoeq->n, i;
-    real_t normaL2, res, x, b, d, di, ds, h;
+    int n = edoeq->n;
+    real_t normaL2 = 0.0;
+    real_t h = (edoeq->b - edoeq->a) / (n + 1);
+    real_t xi, bi, di, d, ds;
 
-    normaL2 = 0.0;
+    for (int i = 0; i < n; ++i) {
+        xi = edoeq->a + (i + 1) * h;
+        bi = h * h * edoeq->r(xi);
+        di = 1 - h * edoeq->p(xi)/2.0;
+        d = -2 + h * h * edoeq->q(xi);
+        ds = 1 + h * edoeq->p(xi)/2.0;
 
-    h = (edoeq->b-edoeq->a)/(n+1);
+        if (i == 0)
+            bi -= ds * Y[i + 1] + edoeq->ya * (1 - h*edoeq->p(edoeq->a+h) / 2.0);
+        else if (i == n - 1)
+            bi -= di * Y[i - 1] + edoeq->yb * (1 + h*edoeq->p(edoeq->b-h) / 2.0);
+        else
+            bi -= ds * Y[i + 1] + di * Y[i - 1] ;
 
-    // algoritmo para calcular Norma L2 usando parâmetros EDO, sem usar vetores para
-    // diagonais e termos independentes do SL  
+        normaL2 = pow((bi / d ) -  h * h * edoeq->r(xi), 2);
+    }
 
-    return normaL2;
+    return sqrt(h * normaL2);
 }
 
 // Exibe um vetor na saída padrão
