@@ -17,8 +17,12 @@ int main ()
 {
 
   EDo edo = {5, 0, 1, -1, 0, pp, qq, rr}; // definição da EDO do exercício
-  real_t *Y = malloc(edo.n * sizeof(real_t)); // Resultado da EDO.
+  real_t *Y = calloc(edo.n, sizeof(real_t)); // Resultado da EDO.
 
+  Tridiag *sl = genTridiag(&edo);
+
+  gaussSeidel_3Diag(sl, Y, MAXIT);
+  
   // aplica gauss-seidel para malhas 5, 10, 100 e 1000
   // Mostra resultados
   
