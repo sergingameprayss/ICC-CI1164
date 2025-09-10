@@ -3,23 +3,45 @@
 #include <time.h>
 
 #include "utils.h"
-#include "edo.c"
+#include "edo.h"
+#include "gaussSeidel_EqDiff.h"
+
 
 int main () {
     int h;
-    real_t a, b, Ya, Yb, p,q;
+    real_t norma;
+    EDo *edo = malloc(sizeof(EDo));
 
-    scanf("%d\n", &h);
-    scanf("%lf, %lf\n", &a, &b);
-    scanf("%lf, %lf\n", &Ya, &Yb);
-    scanf("%lf, %lf\n", &p, &q);
+    scanf("%d", &h);
+    
+    edo->n = h;
+    real_t *Y = calloc(edo->n, sizeof(real_t));
 
-
+    scanf("%lf %lf", &edo->a, &edo->b);
+    scanf("%lf %lf", &edo->ya, &edo->yb);
+    scanf("%lf %lf", &edo->p, &edo->q);
     // ver logica de ler os coeficientes linha a linha
-    // a apartir da quinta
-    real_t *r = calloc(4, sizeof(real_t));
-    
-    
+    // a apartir da quinta 
+    while (scanf("%lf %lf %lf %lf", &edo->r1, &edo->r2, &edo->r3, &edo->r4) != EOF){    
+        int it = 0;
+        Tridiag *sl = genTridiag(edo);
+
+        prnEDOsl(edo);
+        real_t time = gaussSeidel_3Diag(sl, Y, &it, MAXIT);
+        prnVetor(Y, sl->n);
+        printf("%d\n", it);
+        norma = normaL2_3Diag(sl, Y); //passando h pq?
+        printf(FORMAT, norma);
+        printf("\n");
+        printf("%16.8e", time);
+        printf("\n");
+    }
+
+
+    free(edo);
+    free(Y);
+
+
 
     return 0;
 }

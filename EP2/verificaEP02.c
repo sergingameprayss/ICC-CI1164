@@ -10,7 +10,7 @@ int main() {
 
   while ( (k=scanf("%d\n", &n)) != EOF) {
     if (k != 1) {
-      printf("Formato de saída INCORRETO\n");
+      printf(" A Formato de saída INCORRETO\n");
       exit(1);
     }
   
@@ -21,19 +21,19 @@ int main() {
     for (int i =0; i < n; ++i)
       for (int j = 0; j < n+1; ++j)
 	if (scanf("%lf", &(M[i][j])) != 1) {
-	  printf("Formato de saída INCORRETO\n");
+	  printf(" B  Formato de saída INCORRETO\n");
 	  exit(1);
 	}
 
     Y = (double *) malloc(sizeof(double) * n);
     for (int j = 0; j < n; ++j)
       if (scanf("%lf", &(Y[j])) != 1) {
-	printf("Formato de saída INCORRETO\n");
+	printf(" C Formato de saída INCORRETO\n");
 	exit(1);
       }
   
     if (scanf("%lf\n", &t) != 1) {
-      printf("Formato de saída INCORRETO\n");
+      printf(" D Formato de saída INCORRETO\n");
       exit(1);
     }
 

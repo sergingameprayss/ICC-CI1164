@@ -50,7 +50,7 @@ real_t calcErros (real_t fxk, real_t xk, real_t xk1, real_t *valErro, int criter
         Double_t uxk, uxk1;
         uxk.f = xk;
         uxk1.f = xk1;
-        *valErro = llabs(uxk.i - uxk1.i) - 1;
+        *valErro =  llabs(uxk.i - uxk1.i) - 1;
         if(*valErro < ZERO){
             *valErro = 0.0;
         }
