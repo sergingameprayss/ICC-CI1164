@@ -30,6 +30,6 @@ typedef long long int lint_t;
 // Funções
 rtime_t timestamp(void);
 string_t markerName(string_t baseName, int n);
-
+void zera_vetor (real_t *v, int n);
 #endif // __UTILS_H__
 

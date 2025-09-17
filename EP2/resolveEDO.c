@@ -24,13 +24,14 @@ int main () {
     // a apartir da quinta 
     while (scanf("%lf %lf %lf %lf", &edo->r1, &edo->r2, &edo->r3, &edo->r4) != EOF){    
         int it = 0;
+        zera_vetor(Y, edo->n);
         Tridiag *sl = genTridiag(edo);
 
         prnEDOsl(edo);
         real_t time = gaussSeidel_3Diag(sl, Y, &it, MAXIT);
         prnVetor(Y, sl->n);
         printf("%d\n", it);
-        norma = normaL2_3Diag(sl, Y); //passando h pq?
+        norma = normaL2_3Diag(sl, Y); 
         printf(FORMAT, norma);
         printf("\n");
         printf("%16.8e", time);
