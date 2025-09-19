@@ -1,7 +1,9 @@
+// SERGIO SIVONEI DE SANT'ANA FILHO - GRR 20242337
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <likwid.h>
+#include <fenv.h>
 
 #include "utils.h"
 #include "edo.h"
@@ -9,7 +11,7 @@
 
 
 int main () {
-
+    fesetround(FE_DOWNWARD);
     LIKWID_MARKER_INIT;
     
     int h;
@@ -26,12 +28,10 @@ int main () {
     scanf("%lf %lf", &edo->p, &edo->q);
 
     int i = 0;
-    // ver logica de ler os coeficientes linha a linha
-    // a apartir da quinta 
     while (scanf("%lf %lf %lf %lf", &edo->r1, &edo->r2, &edo->r3, &edo->r4) != EOF){    
         int it = 0;
         zera_vetor(Y, edo->n);
-        
+        printf("\n");
         Tridiag *sl = genTridiag(edo);
         prnEDOsl(edo);
 

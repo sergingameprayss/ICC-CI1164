@@ -1,3 +1,5 @@
+// SERGIO SIVONEI DE SANT'ANA FILHO - GRR 20242337
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>

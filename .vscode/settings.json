@@ -3,6 +3,7 @@
         "random": "c",
         "algorithm": "c",
         "gaussseidel.h": "c",
-        "gaussseidel_eqdiff.h": "c"
+        "gaussseidel_eqdiff.h": "c",
+        "time.h": "c"
     }
 }

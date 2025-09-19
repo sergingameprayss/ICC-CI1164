@@ -1,3 +1,4 @@
+// SERGIO SIVONEI DE SANT'ANA FILHO - GRR 20242337
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -16,7 +17,7 @@ rtime_t gaussSeidel_3Diag (Tridiag *sl, real_t *Y, int *it, unsigned int maxiter
     // algoritmo  Gauss-Seidel   com  vetores   das  diagonais   e  termos
     // independentes do SL
     *it = 0;
-    while(normaL2_3Diag(sl, Y) > 10e-5 && (*it) < maxiter) {
+    while(normaL2_3Diag(sl, Y) > 1e-5 && (*it) < maxiter) {
         (*it) += 1;
         
         // 5(n-2)+6 ≈ 5n operações / iteração
@@ -51,18 +52,4 @@ real_t normaL2_3Diag (Tridiag *sl, real_t *Y) {
 
     return sqrt(normaL2);
 }
-
-// Exibe um vetor na saída padrão
-void prnVetor (real_t *v, unsigned int n)
-{
-  int i;
-
-  printf ("\n");
-
-  for(i=0; i < n; ++i)
-      printf (FORMAT, v[i]);
-  printf ("\n");
-
-}
-
 

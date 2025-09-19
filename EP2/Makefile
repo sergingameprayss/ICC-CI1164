@@ -1,15 +1,16 @@
+# SERGIO SIVONEI DE SANT'ANA FILHO - GRR 20242337
+
 # PROGRAMA
     PROG = resolveEDO
-    OBJS = $(PROG).o edo.o utils.o gaussSeidel_EqDiff.o # mod1.o mod2.o
-    VERIF = verificaEP02
+    OBJS = $(PROG).o edo.o utils.o gaussSeidel_EqDiff.o# mod1.o mod2.o
+     VERIF = verificaEP02
 
 # Compilador
     CC     = gcc
 
 # Acrescentar onde apropriado as opções para incluir uso da biblioteca LIKWID
-	CFLAGS = -O0 -DLIKWID_PERFMON -I${LIKWID_INCLUDE}
+    CFLAGS = -O0 -DLIKWID_PERFMON -I${LIKWID_INCLUDE}
     LFLAGS = -lm -L${LIKWID_LIB} -llikwid
-
 
 # Lista de arquivos para distribuição. Acrescentar mais arquivos se necessário.
 DISTFILES = *.c *.h LEIAME* Makefile *.dat
@@ -43,6 +44,3 @@ dist: purge
 	@ln -s . $(DISTDIR)
 	@tar -chzvf $(DISTDIR).tgz $(addprefix ./$(DISTDIR)/, $(DISTFILES))
 	@rm -f $(DISTDIR)
-
-
-#likwid-perfctr -O -C 3 -g FLOPS_DP -m ./resolveEdo

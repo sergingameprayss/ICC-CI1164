@@ -1,3 +1,4 @@
+// SERGIO SIVONEI DE SANT'ANA FILHO - GRR 20242337
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -45,3 +46,15 @@ void zera_vetor (real_t *v, int n){
     }
 }
 
+// Exibe um vetor na saída padrão
+void prnVetor (real_t *v, unsigned int n)
+{
+  int i;
+
+  printf ("\n");
+
+  for(i=0; i < n; ++i)
+      printf (FORMAT, v[i]);
+  printf ("\n");
+
+}

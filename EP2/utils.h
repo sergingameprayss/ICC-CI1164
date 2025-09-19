@@ -1,9 +1,13 @@
+// SERGIO SIVONEI DE SANT'ANA FILHO - GRR 20242337
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
+
+
+#define FORMAT "%23.15e"
 
 // Valor absoluto de um número real. Alternativa ao uso da função 'fabs()'
 #define ABS(num)  ((num) < 0.0 ? -(num) : (num))
@@ -31,5 +35,6 @@ typedef long long int lint_t;
 rtime_t timestamp(void);
 string_t markerName(string_t baseName, int n);
 void zera_vetor (real_t *v, int n);
+void prnVetor (real_t *v, unsigned int n);
 #endif // __UTILS_H__
 

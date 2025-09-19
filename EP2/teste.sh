@@ -12,10 +12,7 @@ cat > "$TEMP_INPUT_FILE"
 
 make &> "$VOID_FILE"
 
-./resolveEDO  < "$TEMP_INPUT_FILE" > a.txt
-clear
-cat a.txt
-rm a.txt
+./resolveEDO  < "$TEMP_INPUT_FILE" 2>&1 | grep -v "Running without Marker API"
 
 echo ""
 

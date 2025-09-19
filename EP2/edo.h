@@ -1,9 +1,10 @@
+// SERGIO SIVONEI DE SANT'ANA FILHO - GRR 20242337
 #ifndef __EQDIFF_H__
 #define __EQDIFF_H__
 
+
 typedef double real_t;
 
-#define FORMAT "%23.15e"
 
 // Sistema linear Tri-diagonal
 typedef struct {
